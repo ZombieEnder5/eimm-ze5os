@@ -1,12 +1,12 @@
 ﻿using BepInEx;
 using System;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using Utilla;
 namespace eimm_ze5os
 {
-    // this mod is not intended to affect gameplay
-    // (which I really don't know how THIS mod would be able to affect gameplay)
+    [ModdedGamemode]
     [BepInDependency("org.legoandmars.gorillatag.utilla", "1.5.0")]
     [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin
@@ -18,6 +18,7 @@ namespace eimm_ze5os
         Vector3 objScale = new Vector3(1.5127f, 0.3236f, 1f);
         GameObject obj;
         GameObject copy;
+        AssetBundle bundle;
         void Start()
         {
             Events.GameInitialized += OnGameInitialized;
@@ -44,14 +45,11 @@ namespace eimm_ze5os
         }
         void OnGameInitialized(object sender, EventArgs e)
         {
-            string appDir = Path.GetDirectoryName(Application.dataPath);
-            string modDir = Path.Combine(appDir, "BepInEx", "plugins", "eimm-ze5os");
-            string bundlePath = Path.Combine(modDir, "evryignmymsg");
-            AssetBundle bundle = AssetBundle.LoadFromFile(bundlePath);
-            if (bundle == null)
-                throw new Exception("bundle not found or failed to load");
+            Assembly executing = Assembly.GetExecutingAssembly();
+            Stream stream = executing.GetManifestResourceStream("eimm-ze5os.AssetBundles.evryignmymsg");
+            bundle = AssetBundle.LoadFromStream(stream);
+            stream.Close();
             obj = bundle.LoadAsset<GameObject>("thingus");
-            bundle.Unload(false);
             if (wasEnabled)
                 initObj();
         }

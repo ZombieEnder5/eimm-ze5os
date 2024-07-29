@@ -286,7 +286,11 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Patches\" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="AssetBundles\evryignmymsg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="AssetBundles\evryignmymsg" />
+	</ItemGroup>
 </Project>
